@@ -75,7 +75,7 @@ const msgList = ref([
         avatar: 'img/avatar.jpg',
         title: 'wl',
         describe: '如果喜欢就点个星星支持一下哦',
-        link: 'https://gitee.com/lolicode/scui',
+        link: 'https://tiancai250.github.io/wl-admin-web/',
         time: '5分钟前',
     },
     {
@@ -83,8 +83,8 @@ const msgList = ref([
         type: 'user',
         avatar: 'img/avatar2.jpg',
         title: 'wl',
-        describe: '点进去Gitee获取最新开源版本',
-        link: 'https://gitee.com/lolicode/scui',
+        describe: '点进去Github获取最新开源版本',
+        link: 'https://github.com/TianCai250/wl-admin',
         time: '14分钟前',
     },
 ]);
