@@ -68,46 +68,54 @@ router.beforeEach(async (to, form, next) => {
         }
         isGetRouter = true;
     }
-	next();
+    next();
 });
 
-router.afterEach((to,from) => {
-    NProgress.done()
-})
-
-router.onError((error) => {
-	NProgress.done();
-	ElNotification.error({
-		title: '路由错误',
-		message: error.message
-	});
+router.afterEach((to, from) => {
+    NProgress.done();
 });
 
+router.onError(error => {
+    NProgress.done();
+    ElNotification.error({
+        title: '路由错误',
+        message: error.message,
+    });
+});
 
 //路由扁平化
-function flatAsyncRoutes(routes, breadcrumb=[]) {
-	let res = []
-	routes.forEach(route => {
-		const tmp = {...route}
+function flatAsyncRoutes(routes, breadcrumb = []) {
+    let res = [];
+    routes.forEach(route => {
+        const tmp = { ...route };
         if (tmp.children) {
-            let childrenBreadcrumb = [...breadcrumb]
-            childrenBreadcrumb.push(route)
-            let tmpRoute = { ...route }
-            tmpRoute.meta.breadcrumb = childrenBreadcrumb
-            delete tmpRoute.children
-            res.push(tmpRoute)
-            let childrenRoutes = flatAsyncRoutes(tmp.children, childrenBreadcrumb)
-            childrenRoutes.map(item => {
-                res.push(item)
+            let childrenBreadcrumb = [...breadcrumb];
+            // childrenBreadcrumb.push(route);
+            childrenBreadcrumb.push({
+                component: route.component,
+                meta: {...route.meta,breadcrumb: []},
+                name: route.name,
+                path: route.path,
+                redirect: route.redirect
             })
+
+            let tmpRoute = { ...route };
+            tmpRoute.meta.breadcrumb = childrenBreadcrumb;
+            delete tmpRoute.children;
+            res.push(tmpRoute);
+            console.log('childrenBreadcrumb', childrenBreadcrumb);
+            let childrenRoutes = flatAsyncRoutes(tmp.children, childrenBreadcrumb);
+            childrenRoutes.map(item => {
+                res.push(item);
+            });
         } else {
-            let tmpBreadcrumb = [...breadcrumb]
-            tmpBreadcrumb.push(tmp)
-            tmp.meta.breadcrumb = tmpBreadcrumb
-            res.push(tmp)
+            let tmpBreadcrumb = [...breadcrumb];
+            tmpBreadcrumb.push(tmp);
+            tmp.meta.breadcrumb = tmpBreadcrumb;
+            res.push(tmp);
         }
-    })
-    return res
+    });
+    return res;
 }
 
 //转换

@@ -56,11 +56,12 @@
     </div>
 </template>
 <script setup>
-import { ref, onBeforeMount, nextTick, watch } from 'vue';
+import { ref, onBeforeMount, nextTick, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import config from '@/config';
 import storage from '@/utils/storage';
 import usestore from '@/store';
+import tool from '@/utils/tool'
 
 import SideM from './components/sideM.vue';
 import Topbar from './components/topbar.vue';
@@ -89,10 +90,12 @@ onBeforeMount(() => {
 watch(
     () => route,
     newVal => {
+        console.log(newVal)
         showThis();
     },
     { deep: true },
 );
+
 
 watch(
     () => global.layout,
@@ -132,7 +135,8 @@ const filterUrl = map => {
 //路由监听高亮
 const showThis = () => {
     pmenu.value = route.meta.breadcrumb ? route.meta.breadcrumb[0] : {};
-    nextMenu.value = filterUrl(pmenu.value.children);
+    const menu = storage.getMenu();
+    nextMenu.value = filterUrl(menu.find(item => item.name == pmenu.value.name).children);
     nextTick(() => {
         active.value = route.meta.active || route.fullPath;
     });
