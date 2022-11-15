@@ -90,6 +90,7 @@ function flatAsyncRoutes(routes, breadcrumb = []) {
         const tmp = { ...route };
         if (tmp.children) {
             let childrenBreadcrumb = [...breadcrumb];
+            // 循环引用问题
             // childrenBreadcrumb.push(route);
             childrenBreadcrumb.push({
                 component: route.component,
