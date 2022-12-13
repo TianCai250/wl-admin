@@ -1,12 +1,14 @@
 <template>
     <div class="adminui-tags">
         <ul ref="tags">
-            <li v-for="tag in tagList" v-bind:key="tag" :class="[isActive(tag) ? 'active' : '', tag.meta.affix ? 'affix' : '']" @contextmenu.prevent="openContextMenu($event, tag)">
-                <router-link :to="tag">
-                    <span>{{ tag.meta.title }}</span>
-                    <el-icon v-if="!tag.meta.affix" @click.prevent.stop="closeSelectedTag(tag)"><el-icon-close /></el-icon>
-                </router-link>
-            </li>
+            <transition-group enter-active-class="animate__animated animate__fadeInUp" leave-active-class="animate__animated animate__fadeOutDown">
+                <li v-for="tag in tagList" v-bind:key="tag" :class="[isActive(tag) ? 'active' : '', tag.meta.affix ? 'affix' : '']" @contextmenu.prevent="openContextMenu($event, tag)">
+                    <router-link :to="tag">
+                        <span>{{ tag.meta.title }}</span>
+                        <el-icon v-if="!tag.meta.affix" @click.prevent.stop="closeSelectedTag(tag)"><el-icon-close /></el-icon>
+                    </router-link>
+                </li>
+            </transition-group>
         </ul>
     </div>
 
@@ -85,7 +87,7 @@ watch(
             }
         });
     },
-    {deep: true}
+    { deep: true },
 );
 
 watch(contextMenuVisible, value => {
@@ -106,7 +108,7 @@ onBeforeMount(() => {
     var menu = storage.getMenu();
     var dashboardRoute = treeFind(menu, node => node.path == config.DASHBOARD_URL);
     if (dashboardRoute) {
-        dashboardRoute.fullPath = dashboardRoute.path;
+        dashboardRoute.path = dashboardRoute.path;
         addViewTags(dashboardRoute);
         addViewTags(route);
     }
@@ -142,7 +144,6 @@ const tagDrop = () => {
 const addViewTags = curRoute => {
     if (curRoute.name && !curRoute.meta.fullpage) {
         let r = {
-            fullPath: curRoute.fullPath,
             hash: curRoute.hash,
             matched: curRoute.matched,
             meta: curRoute.meta,
@@ -151,7 +152,7 @@ const addViewTags = curRoute => {
             path: curRoute.path,
             query: curRoute.query,
             redirectedFrom: curRoute.redirectedFrom,
-        }
+        };
         viewTags.pushViewTags(r);
         keepAlive.pushKeepLive(curRoute.name);
     }
@@ -159,12 +160,12 @@ const addViewTags = curRoute => {
 
 //高亮tag
 const isActive = curRoute => {
-    return curRoute.fullPath === route.fullPath;
+    return curRoute.path === route.path;
 };
 
 //关闭tag
 const closeSelectedTag = (tag, autoPushLatestView = true) => {
-    const nowTagIndex = tagList.value.findIndex(item => item.fullPath == tag.fullPath);
+    const nowTagIndex = tagList.value.findIndex(item => item.path == tag.path);
     viewTags.removeViewTags(tag);
     iframe.removeIframeList(tag);
     keepAlive.removeKeepLive(tag.name);
@@ -206,9 +207,9 @@ const refreshTab = () => {
     var nowTag = contextMenuItem.value;
     contextMenuVisible.value = false;
     //判断是否当前路由，否的话跳转
-    if (route.fullPath != nowTag.fullPath) {
+    if (route.path != nowTag.path) {
         router.push({
-            path: nowTag.fullPath,
+            path: nowTag.path,
             query: nowTag.query,
         });
     }
@@ -236,15 +237,15 @@ const closeTabs = () => {
 const closeOtherTabs = () => {
     var nowTag = contextMenuItem.value;
     //判断是否当前路由，否的话跳转
-    if (route.fullPath != nowTag.fullPath) {
+    if (route.path != nowTag.path) {
         router.push({
-            path: nowTag.fullPath,
+            path: nowTag.path,
             query: nowTag.query,
         });
     }
     var tags = [...tagList.value];
     tags.forEach(tag => {
-        if ((tag.meta && tag.meta.affix) || nowTag.fullPath == tag.fullPath) {
+        if ((tag.meta && tag.meta.affix) || nowTag.path == tag.path) {
             return true;
         } else {
             closeSelectedTag(tag, false);
@@ -258,9 +259,9 @@ const maximize = () => {
     var nowTag = contextMenuItem.value;
     contextMenuVisible.value = false;
     //判断是否当前路由，否的话跳转
-    if (route.fullPath != nowTag.fullPath) {
+    if (route.path != nowTag.path) {
         router.push({
-            path: nowTag.fullPath,
+            path: nowTag.path,
             query: nowTag.query,
         });
     }
@@ -350,5 +351,11 @@ const scrollInit = () => {
 
 .dark .contextmenu li {
     color: var(--el-text-color-primary);
+}
+.animate__animated {
+    --animate-duration: 0.2s;
+}
+.tag {
+    transition: all linear 0.2s;
 }
 </style>

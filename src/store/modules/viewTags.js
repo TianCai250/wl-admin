@@ -10,8 +10,8 @@ const viewTagsStore = defineStore('viewTags', {
     },
     actions: {
         pushViewTags(route) {
-            let backPathIndex = this.viewTags.findIndex(item => item.fullPath == router.options.history.state.back);
-            let target = this.viewTags.find(item => item.fullPath === route.fullPath);
+            let backPathIndex = this.viewTags.findIndex(item => item.path == router.options.history.state.back);
+            let target = this.viewTags.find(item => item.path === route.path);
             let isName = route.name;
             if (!target && isName) {
                 if (backPathIndex == -1) {
@@ -23,14 +23,14 @@ const viewTagsStore = defineStore('viewTags', {
         },
         removeViewTags(route) {
             this.viewTags.forEach((item, index) => {
-                if (item.fullPath === route.fullPath) {
+                if (item.path === route.path) {
                     this.viewTags.splice(index, 1);
                 }
             });
         },
         updateViewTags(route) {
             this.viewTags.forEach(item => {
-                if (item.fullPath == route.fullPath) {
+                if (item.path == route.path) {
                     item = Object.assign(item, route);
                 }
             });
@@ -38,7 +38,7 @@ const viewTagsStore = defineStore('viewTags', {
         updateViewTagsTitle(title = '') {
             const nowFullPath = location.hash.substring(1);
             this.viewTags.forEach(item => {
-                if (item.fullPath == nowFullPath) {
+                if (item.path == nowFullPath) {
                     item.meta.title = title;
                 }
             });

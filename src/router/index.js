@@ -64,7 +64,7 @@ router.beforeEach(async (to, form, next) => {
         });
         removeRoute404 = router.addRoute(routes_404);
         if (to.matched.length == 0) {
-            router.push(to.fullPath);
+            router.push(to.path);
         }
         isGetRouter = true;
     }

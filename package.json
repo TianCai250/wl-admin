@@ -5,10 +5,12 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:dev": "vue-cli-service build --mode development",
     "start": "npm run serve",
     "inspect": "vue inspect --mode=production > webpack.prod.js"
   },
   "dependencies": {
+    "animate.css": "^4.1.1",
     "core-js": "^3.8.3",
     "crypto-js": "^4.1.1",
     "element-plus": "^2.2.20",

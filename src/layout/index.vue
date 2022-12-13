@@ -44,7 +44,7 @@
             <div class="adminui-main" id="adminui-main">
                 <router-view v-slot="{ Component }">
                     <keep-alive :include="keepAlive.keepLiveRoute">
-                        <component :is="Component" :key="$route.fullPath" v-if="keepAlive.routeShow" />
+                        <component :is="Component" :key="$route.path" v-if="keepAlive.routeShow" />
                     </keep-alive>
                 </router-view>
                 <iframe-view></iframe-view>
@@ -138,7 +138,7 @@ const showThis = () => {
     const menu = storage.getMenu();
     nextMenu.value = filterUrl(menu.find(item => item.name == pmenu.value.name).children);
     nextTick(() => {
-        active.value = route.meta.active || route.fullPath;
+        active.value = route.meta.active || route.path;
     });
 };
 
