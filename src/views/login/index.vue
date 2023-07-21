@@ -76,6 +76,7 @@ const rules = reactive({
 });
 
 const login = async () => {
+    console.log(234);
     var validate = await loginForm.value.validate().catch(() => {});
     if (!validate) {
         return false;

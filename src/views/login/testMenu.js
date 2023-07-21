@@ -15,6 +15,7 @@ export const testMenu = [
                     title: '控制台',
                     icon: 'el-icon-menu',
                     affix: true,
+                    type: 'menu',
                 },
                 component: 'home',
             },
@@ -24,6 +25,7 @@ export const testMenu = [
                 meta: {
                     title: '帐号信息',
                     icon: 'el-icon-user',
+                    type: 'menu',
                 },
                 component: 'userCenter',
             },
@@ -77,6 +79,7 @@ export const testMenu = [
                     {
                         path: 'https://v3.cn.vuejs.org',
                         name: 'vue3',
+                        component: 'iframe/vue3',
                         meta: {
                             title: 'VUE 3',
                             type: 'iframe',
@@ -85,6 +88,7 @@ export const testMenu = [
                     {
                         path: 'https://element-plus.gitee.io',
                         name: 'elementplus',
+                        component: 'iframe/elementplus',
                         meta: {
                             title: 'Element Plus',
                             type: 'iframe',
@@ -98,6 +102,7 @@ export const testMenu = [
                 meta: {
                     title: '报表数据',
                     icon: 'el-icon-document',
+                    type: 'menu',
                 },
                 component: 'other/report',
             },

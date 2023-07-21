@@ -1,19 +1,3 @@
 # wl-admin
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+-   新增一个 iframe 菜单，就得在 views 目录下加一个相应的空组件菜单，避免出现 404

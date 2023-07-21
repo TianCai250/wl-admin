@@ -15,7 +15,6 @@ const routes_404 = {
     hidden: true,
     component: () => import(/* webpackChunkName: "404" */ '@/layout/other/404'),
 };
-let removeRoute404 = () => {};
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -34,15 +33,6 @@ router.beforeEach(async (to, form, next) => {
     document.title = to.meta.title ? `${to.meta.title} - ${config.APP_NAME}` : `${config.APP_NAME}`;
     let token = storage.getToken();
     if (to.path === '/login') {
-        //删除路由(替换当前layout路由)
-        router.addRoute(routes[0]);
-        //删除路由(404)
-        removeRoute404();
-        isGetRouter = false;
-        next();
-        return false;
-    }
-    if (routes.findIndex(r => r.path === to.path) >= 0) {
         next();
         return false;
     }
@@ -58,15 +48,17 @@ router.beforeEach(async (to, form, next) => {
         let userInfo = storage.getUserInfo();
         let menu = [...apiMenu];
         var menuRouter = filterAsyncRouter(menu);
+
         menuRouter = flatAsyncRoutes(menuRouter);
         menuRouter.forEach(item => {
             router.addRoute('layout', item);
         });
-        removeRoute404 = router.addRoute(routes_404);
+        router.addRoute(routes_404);
         if (to.matched.length == 0) {
             router.push(to.path);
         }
         isGetRouter = true;
+        console.log(menuRouter);
     }
     next();
 });
@@ -94,17 +86,16 @@ function flatAsyncRoutes(routes, breadcrumb = []) {
             // childrenBreadcrumb.push(route);
             childrenBreadcrumb.push({
                 component: route.component,
-                meta: {...route.meta,breadcrumb: []},
+                meta: { ...route.meta, breadcrumb: [] },
                 name: route.name,
                 path: route.path,
-                redirect: route.redirect
-            })
+                redirect: route.redirect,
+            });
 
             let tmpRoute = { ...route };
             tmpRoute.meta.breadcrumb = childrenBreadcrumb;
             delete tmpRoute.children;
             res.push(tmpRoute);
-            console.log('childrenBreadcrumb', childrenBreadcrumb);
             let childrenRoutes = flatAsyncRoutes(tmp.children, childrenBreadcrumb);
             childrenRoutes.map(item => {
                 res.push(item);
@@ -127,7 +118,7 @@ function filterAsyncRouter(routerMap) {
         //处理外部链接特殊路由
         if (item.meta.type == 'iframe') {
             item.meta.url = item.path;
-            item.path = `/i/${item.name}`;
+            item.path = `/${item.name}`;
         }
         //MAP转路由对象
         var route = {

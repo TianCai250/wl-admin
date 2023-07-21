@@ -60,7 +60,7 @@ const filterUrl = map => {
             }
             //处理http
             if (item.meta.type == 'iframe') {
-                item.path = `/i/${item.name}`;
+                item.path = `/${item.name}`;
             }
             //递归循环
             if (item.children && item.children.length > 0) {

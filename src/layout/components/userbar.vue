@@ -1,5 +1,8 @@
 <template>
     <div class="user-bar">
+        <div class="screen panel-item hidden-sm-and-down hvr-shutter-out-vertical" @click="search">
+            <el-icon title="搜索"><el-icon-search /></el-icon>
+        </div>
         <div class="screen panel-item hidden-sm-and-down" @click="screen">
             <el-icon><el-icon-full-screen /></el-icon>
         </div>
@@ -53,6 +56,7 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
+        <SearchModal :visible="searchVisible" @close="closeSearch" />
     </div>
 </template>
 
@@ -61,7 +65,8 @@ import { ref, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessageBox, ElLoading } from 'element-plus';
 import storage from '@/utils/storage';
-import tool from '@/utils/tool'
+import tool from '@/utils/tool';
+import SearchModal from '@/components/SearchModal';
 
 const router = useRouter();
 
@@ -88,11 +93,18 @@ const msgList = ref([
         time: '14分钟前',
     },
 ]);
+const searchVisible = ref(false);
 
 onBeforeMount(() => {
     var userInfo = storage.getUserInfo();
     userName.value = userInfo.userName;
     userNameF.value = userName.value.substring(0, 1);
+    document.onkeydown = e => {
+        if (e.ctrlKey && (e.key === 'k' || e.key === 'K')) {
+            searchVisible.value = !this.searchVisible.value;
+            return false;
+        }
+    };
 });
 
 //个人信息
@@ -111,10 +123,7 @@ const handleUser = command => {
                 const loading = ElLoading.service();
                 storage.clear();
                 router.replace({ path: '/login' });
-                setTimeout(() => {
-                    loading.close();
-                    location.reload();
-                }, 1000);
+                loading.close();
             })
             .catch(() => {
                 //取消
@@ -147,6 +156,13 @@ const showMsg = () => {
 //标记已读
 const markRead = () => {
     msgList.value = [];
+};
+//搜索
+const search = () => {
+    searchVisible.value = true;
+};
+const closeSearch = () => {
+    searchVisible.value = false;
 };
 </script>
 
