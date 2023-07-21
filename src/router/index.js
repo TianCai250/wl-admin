@@ -127,16 +127,18 @@ function filterAsyncRouter(routerMap) {
             meta: item.meta,
             redirect: item.redirect,
             children: item.children ? filterAsyncRouter(item.children) : null,
-            component: loadComponent(item.component),
+            component: loadComponent(item),
         };
         accessedRouters.push(route);
     });
     return accessedRouters;
 }
 
-function loadComponent(component) {
-    if (component) {
-        return () => import(/* webpackChunkName: "[request]" */ `@/views/${component}`);
+function loadComponent(item) {
+    if (item.meta.type === 'iframe') {
+        return () => import(/* webpackChunkName: "[request]" */ `@/views/iframe`);
+    } else if (item.component) {
+        return () => import(/* webpackChunkName: "[request]" */ `@/views/${item.component}`);
     } else {
         return () => import(`@/layout/other/empty`);
     }
